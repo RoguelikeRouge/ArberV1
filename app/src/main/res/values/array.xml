@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="spinner1Items">
+        <item>ODN</item>
+        <item>DOGE</item>
+        <item>LTC</item>
+        <item>ETC</item>
+        <item>XMR</item>
+        <item>BCH</item>
+        <item>DASH</item>
+        <item>ZEC</item>
+    </string-array>
+
+    <string-array name="spinner2Items">
+        <item>BTC</item>
+    </string-array>
+</resources>
