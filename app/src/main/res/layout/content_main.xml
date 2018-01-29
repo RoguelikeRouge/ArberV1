@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.example.lenovo.myapplication.MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+
+        <TableRow>
+            <TextView
+                android:id="@+id/coin_Pair_textview"
+
+                android:text="@string/choose_currency"
+                 />
+            />
+
+            <Spinner
+                android:id="@+id/coin1_spinner"
+
+                android:entries="@array/spinner1Items" />
+            <Spinner
+                android:id="@+id/coin2_spinner"
+
+                android:entries="@array/spinner2Items"
+                />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/buy_textview"
+                android:text="Best buy"/>
+            <TextView
+                android:id="@+id/buy_vol_textview"
+                android:text="XXX" />
+            <TextView
+                android:id="@+id/buy_vol_currency_textview"
+                android:text="Currency 1"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/buy_at_textview"
+                android:text="for" />
+            <TextView
+                android:id="@+id/buy_price_textview"
+                android:text="XXX" />
+            <TextView
+                android:id="@+id/buy_price_currency_textview"
+                android:text="@string/currency_2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/buy_total_textview"
+                android:text="total" />
+            <TextView
+                android:id="@+id/buy_total_amount_textview"
+                android:text="XXX" />
+            <TextView
+                android:id="@+id/buy_total_currency_textview"
+                android:text="@string/currency_2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/buy_on_textview"
+                android:text="on" />
+            <TextView
+                android:id="@+id/buy_exchange_textview"
+                android:text="Exchange 1" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/blank_textview"
+                android:text="" />
+        </TableRow>
+
+
+        <TableRow>
+            <TextView
+                android:id="@+id/sell_textview"
+                android:text="@string/sell" />
+            <TextView
+                android:id="@+id/sell_vol_textview"
+                android:text="XXX" />
+            <TextView
+                android:id="@+id/sell_vol_currency_textview"
+                android:text="Currency 1" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/sell_at_textview"
+                android:text="for" />
+            <TextView
+                android:id="@+id/sell_price_textview"
+                android:text="XXX" />
+            <TextView
+                android:id="@+id/sell_price_currency_textview"
+                android:text="@string/currency_2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/sell_total_textview"
+                android:text="total" />
+            <TextView
+                android:id="@+id/sell_total_amount_textview"
+                android:text="XXX" />
+            <TextView
+                android:id="@+id/sell_total_currency_textview"
+                android:text="@string/currency_2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/sell_on_textview"
+                android:text="on" />
+            <TextView
+                android:id="@+id/sell_exchange_textview"
+                android:text="Exchange 2" />
+        </TableRow>
+        <TableRow>
+            <TextView
+            android:id="@+id/blank2_textview"
+            android:text =""/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/percent_profit_textview"
+                android:text ="Percent profit: "/>
+            <TextView
+            android:id="@+id/percent_profit_amount_textview"
+            android:text ="XXX"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/btc_profit_textview"
+                android:text="BTC profit: "/>
+            <TextView
+                android:id="@+id/btc_profit_amount_textview"
+                android:text ="XXX"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+            android:id="@+id/usd_profit"
+            android:text="USD profit: "/>
+            <TextView
+                android:id="@+id/usd_profit_amount"
+                android:text="XXX"/>
+        </TableRow>
+
+    </TableLayout>
+
+
+
+
+</android.support.constraint.ConstraintLayout>
+
+
