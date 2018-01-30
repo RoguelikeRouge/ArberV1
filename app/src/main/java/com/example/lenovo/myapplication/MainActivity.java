@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -43,20 +45,7 @@ public class MainActivity extends AppCompatActivity {
     String selectedCurrency = "ODN";
 
     ArbCode arbCode = new ArbCode();
-    /*
-    |"coin pair"-------Choose_coin_spinner--------"Choose_coin2_spinner(future)"
-    |"buy" ------------***volume***---------------------Coin1_currency-from spinner
-    |"at"      --------***price_in_coin2***-------------coin2_currency
-    |total ----------***total_price_in_coin2***-------coin2_currency
-    |on -------------***Exchange1_name*** ------------
-    |
-    |REPEAT FOR SELLS
-    |
-    |Percent profit
-    |BTC profit
-    |USD profit
 
-     */
 
 
     @Override
@@ -102,12 +91,21 @@ public class MainActivity extends AppCompatActivity {
         textView12 = (TextView) findViewById(R.id.sell_vol_currency_textview);
         textView13 = (TextView) findViewById(R.id.buy_vol_currency_textview);
 
+        String allCoinsArray[];
+
 
         prepareAsycMethods();
 
         coin1Spinner = (Spinner)findViewById(R.id.coin1_spinner);
 
-        coin1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        List<String> allCoinsList1 = arbCode.getAllCoins("hitbtc");
+        List<String> allCoinsList2 = arbCode.getAllCoins("cryptopia");
+        String validAllCoinsList[] = arbCode.getValidSpinnerCoinOptions(allCoinsList1,allCoinsList2);
+        //this is a test, updates spinner entries
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this,   android.R.layout.simple_spinner_item, validAllCoinsList); // The drop down view
+        coin1Spinner.setAdapter(spinnerArrayAdapter);
+
+        coin1Spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() { //updates arb stats based on selected spinner item
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 selectedCurrency = coin1Spinner.getSelectedItem().toString();
                 textView12.setText(selectedCurrency);
@@ -122,6 +120,10 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         });
+
+        //GET ALL PAIRS, SET SPINNER TO THAT VALUE
+        // disable exchange
+        //arbCode.getAllCoins("hitbtc");
 
     }
 

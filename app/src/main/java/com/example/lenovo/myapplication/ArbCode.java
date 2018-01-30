@@ -41,11 +41,16 @@ import java.io.Reader;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.text.Collator;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 //import java.util.Iterator;
 //import javax.sound.sampled.AudioFormat;
 //import javax.sound.sampled.AudioSystem;
@@ -228,7 +233,7 @@ public class ArbCode {
     public float[] getTradeDataFromJson(String url, String exchangeName) throws IOException, JSONException{
         float[] tradeData = new float[5];
         JSONObject json = this.readJsonFromUrl(url);
-        Log.d("myTag", json.toString());
+        //Log.d("myTag", json.toString());
         String askTemp = null;
         String bidTemp = null;
         String askVolumeTemp = null;
@@ -318,100 +323,7 @@ public class ArbCode {
     }
 
 
-    //THIS NEEDS TO BE TIDIED-------
-    public void getArbDataNew(float[] exchange1Data, float[] exchange2Data){
 
-        //ask, askVol, bid, bidVol
-        //new vars
-        float bestBuyPrice = 0;
-        float bestBuyTotalPrice = 0;
-        float bestBuyVol = 0;
-        float bestSellPrice = 0;
-        float bestSellTotalPrice = 0;
-        float bestSellVol =0;
-        float bestBuyExchange = 0;
-        float bestSellExchange = 0;
-
-        //DEBUGGER VALUES
-        String test = "";
-        float percentProfit = 0;
-        float profitInBtc = 0;
-        float profitInDollars = 0;
-        System.out.println("Exchange 1--- Ask/volume :"+exchange1Data[0]+"/"+exchange1Data[1]+" bid/volume: "+exchange1Data[2]+"/"+exchange1Data[3]);
-        System.out.println("Exchange 2--- Ask/volume :"+exchange2Data[0]+"/"+exchange2Data[1]+" bid/volume: "+exchange2Data[2]+"/"+exchange2Data[3]);
-        //Now to tell arbitrage
-        //Can maybe replace with global variables that just get reset
-        if (exchange1Data[2] > exchange2Data[0]) { //if buy on cryptopia is more than sell on hitbtc
-            test = "Buy at "+exchange2Data[0]+" for "+exchange1Data[3]+" units, sell at "+exchange1Data[2]+" for "+exchange1Data[3]+" units";
-            System.out.println(test);
-
-            bestBuyPrice = exchange2Data[0];
-            bestBuyVol = exchange2Data[1];
-            bestBuyTotalPrice = bestBuyPrice*bestBuyVol;
-            bestBuyExchange = exchange2Data[4];
-            bestSellPrice = exchange1Data[2];
-            bestSellTotalPrice = bestSellPrice*bestSellVol;
-            bestSellVol = exchange1Data[3];
-            bestSellExchange = exchange1Data[4];
-
-            profitInBtc = (exchange1Data[2]-exchange2Data[0])*exchange2Data[1]; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
-            percentProfit = ((exchange1Data[2]-exchange2Data[0])/exchange2Data[0])*100; //(bidPrice - askPrice) / askPrice * 100;
-            System.out.println("Percent profit: "+percentProfit);
-
-
-        }
-        else if(exchange2Data[2] > exchange1Data[0]){
-            test = "Buy at "+exchange1Data[0]+" for "+exchange2Data[3]+" units, sell at "+exchange2Data[2]+" for "+exchange2Data[3]+" units";
-            System.out.println(test);
-
-            bestBuyPrice = exchange2Data[0];
-            bestBuyVol = exchange2Data[1];
-            bestBuyTotalPrice = bestBuyPrice*bestBuyVol;
-            bestBuyExchange = exchange2Data[4];
-            bestSellPrice = exchange1Data[2];
-            bestSellTotalPrice = bestSellPrice*bestSellVol;
-            bestSellVol = exchange1Data[3];
-            bestSellExchange = exchange1Data[4];
-
-            profitInBtc = (exchange2Data[2]-exchange1Data[0])*exchange1Data[1];
-            percentProfit = ((exchange2Data[2]-exchange1Data[0])/exchange1Data[0])*100;
-            System.out.println("Percent profit: "+percentProfit);
-
-        }
-        else{
-            System.out.println("No dice.");
-            percentProfit = ((exchange1Data[2]-exchange2Data[0])/exchange2Data[0])*100;
-            test = "bid: "+exchange1Data[2]+" LESS THAN sell: "+exchange2Data[0]+" Difference: "+percentProfit;
-            System.out.println(test);
-            //percentProfit = ((exchange2Data[2]-exchange1Data[0])/exchange1Data[0])*100;
-            percentProfit = 0;
-            profitInBtc = 0;
-            System.out.println("bid: "+exchange2Data[2]+" LESS THAN sell: "+exchange1Data[0]+" Difference: "+percentProfit);
-        }
-        int percentProfInt = (int) Math.ceil(percentProfit*100);
-        if(percentProfit>1.7){
-            //beep(50, percentProfInt);
-        }
-        profitInDollars = 15000*profitInBtc;
-        System.out.println("Profit in BTC: "+profitInBtc);
-        System.out.println("Profit in dollars: "+profitInDollars);
-
-        //create instructions for trading bot
-        //CAMERON = "Time: "+getDateTime()+""+test+"  /nPercent profit: "+percentProfInt+" Profit in dollars: "+profitInDollars+"";
-        arbData[0] = bestBuyVol;
-        arbData[1] = bestBuyPrice;
-        arbData[2] = bestBuyTotalPrice;
-        arbData[3] = bestBuyExchange;
-        arbData[4] = bestSellVol;
-        arbData[5] = bestSellPrice;
-        arbData[6] = bestSellTotalPrice;
-        arbData[7] = bestSellExchange;
-        arbData[8] = percentProfit;
-        arbData[9] = profitInBtc;
-        arbData[10] = profitInDollars;
-
-
-    }
 
     public void getArbDataNew3(float[] exchange1Data, float[] exchange2Data){
 
@@ -481,30 +393,6 @@ public class ArbCode {
             bestAskTotalPrice = bestAskPrice*bestAskVol;
             bestAskExchange = exchange1Data[4];
         }
-        /*
-        else if (exchange2Data[2] > exchange1Data[0]){
-
-            if(exchange1Data[1]<exchange2Data[3]){
-                bestBidVol = exchange2Data[1];
-
-            }
-            else {
-                bestBidVol = exchange2Data[3];
-
-            }
-
-            bestAskVol = bestBidVol;
-            bestBidPrice = exchange1Data[0]; //
-
-            //bestBuyVol = exchange2Data[1]; // needs fix
-            bestBidTotalPrice = bestBidPrice*bestBidVol;
-            bestBidExchange = exchange1Data[4];
-            bestAskPrice = exchange2Data[2];
-            //bestSellVol = exchange1Data[3]; // needs fix
-            bestAskTotalPrice = bestAskPrice*bestAskVol;
-            bestAskExchange = exchange2Data[4];
-        }
-        */
 
         profitInBtc = (bestBidPrice*bestBidVol)-(bestAskPrice*bestAskVol); //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
         percentProfit = (bestBidTotalPrice-bestAskTotalPrice)/bestAskTotalPrice*100; //(bidPrice - askPrice) / askPrice * 100;
@@ -522,123 +410,6 @@ public class ArbCode {
         arbData[9] = profitInBtc;
         arbData[10] = profitInDollars;
     }
-
-    public void getArbDataNew2(float[] exchange1Data, float[] exchange2Data){
-
-        //ask, askVol, bid, bidVol
-        //new vars
-        float bestBuyPrice = 0;
-        float bestBuyTotalPrice = 0;
-        float bestBuyVol = 0;
-        float bestSellPrice = 0;
-        float bestSellTotalPrice = 0;
-        float bestSellVol =0;
-        float bestBuyExchange = 0;
-        float bestSellExchange = 0;
-
-        //DEBUGGER VALUES
-        String test = "";
-        float percentProfit = 0;
-        float profitInBtc = 0;
-        float profitInDollars = 0;
-        System.out.println("Exchange 1--- Ask/volume :"+exchange1Data[0]+"/"+exchange1Data[1]+" bid/volume: "+exchange1Data[2]+"/"+exchange1Data[3]);
-        System.out.println("Exchange 2--- Ask/volume :"+exchange2Data[0]+"/"+exchange2Data[1]+" bid/volume: "+exchange2Data[2]+"/"+exchange2Data[3]);
-        //Now to tell arbitrage
-        //Can maybe replace with global variables that just get reset
-        if (exchange1Data[2] > exchange2Data[0]) { //if buy on cryptopia is more than sell on hitbtc
-            test = "Buy at "+exchange2Data[0]+" for "+exchange1Data[3]+" units, sell at "+exchange1Data[2]+" for "+exchange1Data[3]+" units";
-            System.out.println(test);
-
-            if(exchange2Data[1]<exchange1Data[3]){
-                bestBuyVol = exchange2Data[1];
-
-            }
-            else {
-                bestBuyVol = exchange2Data[3];
-
-            }
-            bestSellVol = bestBuyVol;
-            bestBuyPrice = exchange2Data[0]; //
-
-            //bestBuyVol = exchange2Data[1]; // needs fix
-            bestBuyTotalPrice = bestBuyPrice*bestBuyVol;
-            bestBuyExchange = exchange2Data[4];
-            bestSellPrice = exchange1Data[2];
-            //bestSellVol = exchange1Data[3]; // needs fix
-            bestSellTotalPrice = bestSellPrice*bestSellVol;
-            bestSellExchange = exchange1Data[4];
-
-
-            profitInBtc = (bestBuyTotalPrice-bestSellTotalPrice)*bestBuyVol; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
-            percentProfit = ((bestBuyTotalPrice-bestSellTotalPrice)/bestSellTotalPrice)*100; //(bidPrice - askPrice) / askPrice * 100;
-            System.out.println("Percent profit: "+percentProfit);
-
-
-        }
-        else if(exchange2Data[2] > exchange1Data[0]){
-            test = "Buy at "+exchange1Data[0]+" for "+exchange2Data[3]+" units, sell at "+exchange2Data[2]+" for "+exchange2Data[3]+" units";
-            System.out.println(test);
-
-            if(exchange2Data[1]<exchange1Data[3]){
-                bestBuyVol = exchange2Data[1];
-
-            }
-            else {
-                bestBuyVol = exchange2Data[3];
-
-            }
-            bestSellVol = bestBuyVol;
-
-            bestBuyPrice = exchange1Data[0];
-            //bestBuyVol = exchange1Data[1];
-            bestBuyTotalPrice = bestBuyPrice*bestBuyVol;
-            bestBuyExchange = exchange1Data[4];
-            bestSellPrice = exchange2Data[2];
-            //bestSellVol = exchange2Data[3];
-            bestSellTotalPrice = bestSellPrice*bestSellVol;
-            bestSellExchange = exchange2Data[4];
-
-            profitInBtc = (bestBuyTotalPrice-bestSellTotalPrice)*bestBuyVol; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
-            percentProfit = ((bestBuyTotalPrice-bestSellTotalPrice)/bestSellTotalPrice)*100; //(bidPrice - askPrice) / askPrice * 100;
-            System.out.println("Percent profit: "+percentProfit);
-
-        }
-        else{
-            System.out.println("No dice.");
-            percentProfit = ((exchange1Data[2]-exchange2Data[0])/exchange2Data[0])*100;
-            test = "bid: "+exchange1Data[2]+" LESS THAN sell: "+exchange2Data[0]+" Difference: "+percentProfit;
-            System.out.println(test);
-            //percentProfit = ((exchange2Data[2]-exchange1Data[0])/exchange1Data[0])*100;
-            percentProfit = 0;
-            profitInBtc = 0;
-            System.out.println("bid: "+exchange2Data[2]+" LESS THAN sell: "+exchange1Data[0]+" Difference: "+percentProfit);
-
-        }
-        int percentProfInt = (int) Math.ceil(percentProfit*100);
-        if(percentProfit>1.7){
-            //beep(50, percentProfInt);
-        }
-        profitInDollars = 11500*profitInBtc; // need live BTC price
-        System.out.println("Profit in BTC: "+profitInBtc);
-        System.out.println("Profit in dollars: "+profitInDollars);
-
-        //create instructions for trading bot
-        //CAMERON = "Time: "+getDateTime()+""+test+"  /nPercent profit: "+percentProfInt+" Profit in dollars: "+profitInDollars+"";
-        arbData[0] = bestBuyVol;
-        arbData[1] = bestBuyPrice;
-        arbData[2] = bestBuyTotalPrice;
-        arbData[3] = bestBuyExchange;
-        arbData[4] = bestSellVol;
-        arbData[5] = bestSellPrice;
-        arbData[6] = bestSellTotalPrice;
-        arbData[7] = bestSellExchange;
-        arbData[8] = percentProfit;
-        arbData[9] = profitInBtc;
-        arbData[10] = profitInDollars;
-
-
-    }
-
 
     public void goArb() throws Exception {
 
@@ -668,6 +439,75 @@ public class ArbCode {
         url2 = "https://api.hitbtc.com/api/1/public/"+currency+"btc/orderbook";
     }
 
+
+
+    //GETS ALL THE COINS LIVE ON AN EXCHANGE - DOESN'T CHECK IF THEY HAVE SOME UNIQUE PROBLEM STATED IN THE JSON
+    public List<String> getAllCoins(String exchangeName){
+            //WILL ACCIDENTALLY CREATE BTC_BTC trading pairs. Need to make code ignore errors here.
+        Log.d("method", "called getallcoins");
+
+            // retrieves json of all coins. Grabs "data" json array. Runs lop to grab each index of the json array. prints each out
+            String sourceUrl =""; // used to access all trading pairs
+            String uniqueParameter1 = ""; //the jsons from different exchanges use different parameters to access individual json objects - they will be set as required
+            String uniqueParameter2 = ""; // as above
+            String outputUrl; //parameter that is returned by this method - unique url for each coin
+            if(exchangeName.equals("hitbtc")){
+                sourceUrl = "https://api.hitbtc.com/api/1/public/symbols";
+                uniqueParameter1 = "symbols";
+                uniqueParameter2 = "commodity";
+            }
+            else if(exchangeName.equals("cryptopia")){
+                sourceUrl = "https://www.cryptopia.co.nz/api/GetCurrencies";
+                uniqueParameter1 = "Data";
+                uniqueParameter2 = "Symbol";
+                Log.d("method", exchangeName);
+            }
+
+            try{
+                JSONObject jsonObject1 = readJsonFromUrl(sourceUrl); //THIS NEEDS TO BE IN A TRY-CATCH IN CASE IT DOESN'T CONNECT, WHICH HAS HAPPENED BEFORE
+                JSONArray jsonArray1 = jsonObject1.getJSONArray(uniqueParameter1);
+
+                //String[] allCoinsArray = new String[jsonArray1.length()]; //initialising array of all base trade pairs before filling in for loop
+                String[] allCoinsArray;
+                //
+                Set<String> hashSet = new HashSet<>(); // like a list, but ignores duplicates
+
+                for (int i = 0; i < jsonArray1.length()-1; i++) { // i set to 1 for some reason - not sure why! gets null value if set to 0 ??
+                    hashSet.add(jsonArray1.getJSONObject(i).get(uniqueParameter2).toString());
+                }
+
+                List<String> allCoinsList = new ArrayList<String>();
+                allCoinsList.addAll(hashSet);
+                java.util.Collections.sort(allCoinsList, Collator.getInstance()); // sorts alphabetically, magically
+                //CAN RETURN LIST INSTEAD
+                //allCoinsArray = new String[allCoinsList.size()];
+                //allCoinsList.toArray(allCoinsArray);
+                //Log.d("all coins array",Arrays.toString(allCoinsArray)); // MAKE NEW LOG PLZ
+                //return allCoinsArray;
+                return allCoinsList;
+            }
+            catch(Exception e){
+
+                System.out.println("Problem with allCoinGetter"+e);
+                Log.d("method", "error"+e);
+
+
+            }
+
+            String error[] = new String[1];
+            error[0] = "error";
+            return null; //not sure what else to return here
+    }
+    //currently just compares two array lists which should contain all trading pairs - the matching ones are put in a new array and returned
+    public String[] getValidSpinnerCoinOptions(List<String> allCoinsList1, List<String> allCoinsList2){
+        allCoinsList1.retainAll(allCoinsList2);
+        String allCoinsArray[] = new String[allCoinsList1.size()];
+        allCoinsList1.toArray(allCoinsArray);
+
+
+        return allCoinsArray;
+
+    }
 
 
     public float[] getArbData(){
