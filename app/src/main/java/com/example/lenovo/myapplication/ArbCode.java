@@ -413,6 +413,116 @@ public class ArbCode {
 
     }
 
+    public void getArbDataNew3(float[] exchange1Data, float[] exchange2Data){
+
+        Log.d("z", Arrays.toString(exchange1Data));
+        Log.d("z", Arrays.toString(exchange2Data));
+        //ask, askVol, bid, bidVol
+        //new vars
+        float ex1Ask = exchange1Data[0];
+        float ex2Ask = exchange2Data[0];
+        float ex1Bid = exchange1Data[2];
+        float ex2Bid = exchange2Data[2];
+        float ex1AskVol = exchange1Data[1];
+        float ex2AskVol = exchange2Data[1];
+        float ex1BidVol = exchange1Data[3];
+        float ex2BidVol = exchange2Data[3];
+
+
+        float bestBidPrice = 0; // best means highest bid price
+        float bestBidTotalPrice = 0;
+        float bestBidVol = 0;
+        float bestAskPrice = 0; // best means lowest
+        float bestAskTotalPrice = 0;
+        float bestAskVol =0;
+        float bestBidExchange = 0;
+        float bestAskExchange = 0;
+
+        //DEBUGGER VALUES
+        String test = "";
+        float percentProfit = 0;
+        float profitInBtc = 0;
+        float profitInDollars = 0;
+
+        //logic
+        //if ask1<buy2 OR if ask2<buy1
+        //bestBid means highest, bestAsk means lowest - you buy the cheapest ask, and sell to the priciest bid
+
+        if (ex1Bid > ex2Ask) { //if bid on ex1 is more than ask on ex2 then buy ex2ask, sell ex1bid
+
+            if(ex1BidVol>ex2AskVol){ //if ex1Ask volume is greater than
+                bestBidVol = ex2AskVol; // maybe say "idealBidVol"
+            }
+            else {
+                bestBidVol = ex1BidVol;
+            }
+            bestAskVol = bestBidVol;
+            bestBidPrice = ex1Bid; //
+            bestBidTotalPrice = bestBidPrice*bestBidVol;
+            bestBidExchange = exchange1Data[4]; // exchange reference stored here
+            bestAskPrice = ex2Ask;
+            bestAskTotalPrice = bestAskPrice*bestAskVol;
+            bestAskExchange = exchange2Data[4];
+        }
+
+        else if(ex2Bid > ex1Ask){
+
+            if(ex2BidVol>ex1AskVol){ //if ex1Ask volume is greater than
+                bestBidVol = ex1AskVol; // maybe say "idealBidVol"
+            }
+            else {
+                bestBidVol = ex2BidVol;
+            }
+            bestAskVol = bestBidVol;
+            bestBidPrice = ex2Bid; //
+            bestBidTotalPrice = bestBidPrice*bestBidVol;
+            bestBidExchange = exchange2Data[4]; // exchange reference stored here
+            bestAskPrice = ex1Ask;
+            bestAskTotalPrice = bestAskPrice*bestAskVol;
+            bestAskExchange = exchange1Data[4];
+        }
+        /*
+        else if (exchange2Data[2] > exchange1Data[0]){
+
+            if(exchange1Data[1]<exchange2Data[3]){
+                bestBidVol = exchange2Data[1];
+
+            }
+            else {
+                bestBidVol = exchange2Data[3];
+
+            }
+
+            bestAskVol = bestBidVol;
+            bestBidPrice = exchange1Data[0]; //
+
+            //bestBuyVol = exchange2Data[1]; // needs fix
+            bestBidTotalPrice = bestBidPrice*bestBidVol;
+            bestBidExchange = exchange1Data[4];
+            bestAskPrice = exchange2Data[2];
+            //bestSellVol = exchange1Data[3]; // needs fix
+            bestAskTotalPrice = bestAskPrice*bestAskVol;
+            bestAskExchange = exchange2Data[4];
+        }
+        */
+
+        profitInBtc = (bestBidPrice*bestBidVol)-(bestAskPrice*bestAskVol); //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
+        percentProfit = (bestBidTotalPrice-bestAskTotalPrice)/bestAskTotalPrice*100; //(bidPrice - askPrice) / askPrice * 100;
+        profitInDollars = 11500*profitInBtc; // need live BTC price
+
+        arbData[0] = bestBidVol;
+        arbData[1] = bestBidPrice;
+        arbData[2] = bestBidTotalPrice;
+        arbData[3] = bestBidExchange;
+        arbData[4] = bestAskVol;
+        arbData[5] = bestAskPrice;
+        arbData[6] = bestAskTotalPrice;
+        arbData[7] = bestAskExchange;
+        arbData[8] = percentProfit;
+        arbData[9] = profitInBtc;
+        arbData[10] = profitInDollars;
+    }
+
     public void getArbDataNew2(float[] exchange1Data, float[] exchange2Data){
 
         //ask, askVol, bid, bidVol
@@ -439,17 +549,28 @@ public class ArbCode {
             test = "Buy at "+exchange2Data[0]+" for "+exchange1Data[3]+" units, sell at "+exchange1Data[2]+" for "+exchange1Data[3]+" units";
             System.out.println(test);
 
-            bestBuyPrice = exchange2Data[0];
-            bestBuyVol = exchange2Data[1];
+            if(exchange2Data[1]<exchange1Data[3]){
+                bestBuyVol = exchange2Data[1];
+
+            }
+            else {
+                bestBuyVol = exchange2Data[3];
+
+            }
+            bestSellVol = bestBuyVol;
+            bestBuyPrice = exchange2Data[0]; //
+
+            //bestBuyVol = exchange2Data[1]; // needs fix
             bestBuyTotalPrice = bestBuyPrice*bestBuyVol;
             bestBuyExchange = exchange2Data[4];
             bestSellPrice = exchange1Data[2];
-            bestSellVol = exchange1Data[3];
+            //bestSellVol = exchange1Data[3]; // needs fix
             bestSellTotalPrice = bestSellPrice*bestSellVol;
             bestSellExchange = exchange1Data[4];
 
-            profitInBtc = (exchange1Data[2]-exchange2Data[0])*exchange2Data[1]; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
-            percentProfit = ((exchange1Data[2]-exchange2Data[0])/exchange2Data[0])*100; //(bidPrice - askPrice) / askPrice * 100;
+
+            profitInBtc = (bestBuyTotalPrice-bestSellTotalPrice)*bestBuyVol; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
+            percentProfit = ((bestBuyTotalPrice-bestSellTotalPrice)/bestSellTotalPrice)*100; //(bidPrice - askPrice) / askPrice * 100;
             System.out.println("Percent profit: "+percentProfit);
 
 
@@ -458,17 +579,27 @@ public class ArbCode {
             test = "Buy at "+exchange1Data[0]+" for "+exchange2Data[3]+" units, sell at "+exchange2Data[2]+" for "+exchange2Data[3]+" units";
             System.out.println(test);
 
+            if(exchange2Data[1]<exchange1Data[3]){
+                bestBuyVol = exchange2Data[1];
+
+            }
+            else {
+                bestBuyVol = exchange2Data[3];
+
+            }
+            bestSellVol = bestBuyVol;
+
             bestBuyPrice = exchange1Data[0];
-            bestBuyVol = exchange1Data[1];
+            //bestBuyVol = exchange1Data[1];
             bestBuyTotalPrice = bestBuyPrice*bestBuyVol;
             bestBuyExchange = exchange1Data[4];
             bestSellPrice = exchange2Data[2];
-            bestSellVol = exchange2Data[3];
+            //bestSellVol = exchange2Data[3];
             bestSellTotalPrice = bestSellPrice*bestSellVol;
             bestSellExchange = exchange2Data[4];
 
-            profitInBtc = (exchange2Data[2]-exchange1Data[0])*exchange1Data[1];
-            percentProfit = ((exchange2Data[2]-exchange1Data[0])/exchange1Data[0])*100;
+            profitInBtc = (bestBuyTotalPrice-bestSellTotalPrice)*bestBuyVol; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
+            percentProfit = ((bestBuyTotalPrice-bestSellTotalPrice)/bestSellTotalPrice)*100; //(bidPrice - askPrice) / askPrice * 100;
             System.out.println("Percent profit: "+percentProfit);
 
         }
@@ -487,7 +618,7 @@ public class ArbCode {
         if(percentProfit>1.7){
             //beep(50, percentProfInt);
         }
-        profitInDollars = 15000*profitInBtc;
+        profitInDollars = 11500*profitInBtc; // need live BTC price
         System.out.println("Profit in BTC: "+profitInBtc);
         System.out.println("Profit in dollars: "+profitInDollars);
 
@@ -510,13 +641,13 @@ public class ArbCode {
 
 
     public void goArb() throws Exception {
-        String output = "something";
+
         try {
             System.out.println(getDateTime());
             ex1Data = this.getTradeDataFromJson(this.url1, this.exchangeName1); // format [askPrice, askVolume, bidPrice, bidVolume] (i.e. 4 elements: 0 to 3)
             ex2Data = this.getTradeDataFromJson(this.url2, this.exchangeName2);
             //this.getArbitrageData(ex1Data, ex2Data);
-            this.getArbDataNew2(ex1Data,ex2Data);
+            this.getArbDataNew3(ex1Data,ex2Data);
             System.out.println("---------");
         } catch (Exception e) {
             System.out.println(e);

@@ -41,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     Spinner coin1Spinner;
 
     String selectedCurrency = "ODN";
+
+    ArbCode arbCode = new ArbCode();
     /*
     |"coin pair"-------Choose_coin_spinner--------"Choose_coin2_spinner(future)"
     |"buy" ------------***volume***---------------------Coin1_currency-from spinner
@@ -110,6 +112,8 @@ public class MainActivity extends AppCompatActivity {
                 selectedCurrency = coin1Spinner.getSelectedItem().toString();
                 textView12.setText(selectedCurrency);
                 textView13.setText(selectedCurrency);
+                final AsyncTaskUpdateCoinSelection asyncTask = new AsyncTaskUpdateCoinSelection();
+                asyncTask.execute();
 
 
             }
@@ -168,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             };
-            timer.schedule(doAsynchronousTask, 0, 500); //execute in every 5000 ms
+            timer.schedule(doAsynchronousTask, 0, 2000); //execute in every 5000 ms
 
 
 
@@ -177,16 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
     class AsyncTaskGetArbData extends AsyncTask<Void, String, Float> {
 
-
-        ArbCode arbCode = new ArbCode();
-
+        //ArbCode arbCode = new ArbCode();
         private final String TAG = AsyncTaskGetArbData.class.getName();
-
-        TextView test;
-        Context myContext;
-
-
-
 
         protected void onPreExecute(){
             Log.d(TAG, "On preExceute...");
@@ -194,9 +190,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected Float doInBackground(Void...arg0) {
-
-
-
             Log.d(TAG, "On doInBackground...");
 
             try {
@@ -205,22 +198,16 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
 
-
             try {
-                arbCode.setUrlCurrency(selectedCurrency);
+                //arbCode.setUrlCurrency(selectedCurrency);
                 arbCode.goArb();
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-
-
-            //return arbCode.getArbData();
             return arbCode.getArbData()[1];
         }
-
-
 
         protected void onProgressUpdate(Integer...a){
             Log.d(TAG,"You are in progress update ... " + a[0]);
@@ -228,8 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(Float result) {
             arbData = arbCode.getArbData();
-            //TextView textView = (TextView) ((Context) mycontext).findViewById(R.id.mainText);
-            //test.setText(Arrays.toString(arbCode.getArbData()));
+
             //{0,1,2,3,4,5,6,7,8,9,10}; //bestBuyPrice, BestBuyVol, BestbuyTotalPrice, Bestbuyex... profit%, profit btc, prof dol,
             textView1.setText(Float.toString(arbData[0]));
             textView2.setText(Float.toString(arbData[1]));
@@ -242,25 +228,39 @@ public class MainActivity extends AppCompatActivity {
             textView9.setText(Float.toString(arbData[8]));
             textView10.setText(Float.toString(arbData[9]));
             textView11.setText(Float.toString(arbData[10]));
+            //Log.d(TAG,Arrays.toString(arbCode.getArbData()));
+        }
+    }
 
-            /*
+    class AsyncTaskUpdateCoinSelection extends AsyncTask<Void, Void, Boolean> {
 
-        textView1 = (TextView) findViewById(R.id.buy_vol_textview);
-        textView2 = (TextView) findViewById(R.id.buy_price_textview);
-        textView3 = (TextView) findViewById(R.id.buy_total_amount_textview);
-        textView4 = (TextView) findViewById(R.id.buy_exchange_textview);
-        textView5 = (TextView) findViewById(R.id.sell_vol_textview);
-        textView6 = (TextView) findViewById(R.id.sell_price_textview);
-        textView7 = (TextView) findViewById(R.id.sell_total_amount_textview);
-        textView8 = (TextView) findViewById(R.id.sell_exchange_textview);
-        textView9 = (TextView) findViewById(R.id.buy_vol_textview);
-        textView10 = (TextView) findViewById(R.id.buy_price_textview);
+        protected void onPreExecute(){
 
-*/
+        }
 
-            Log.d(TAG,Arrays.toString(arbCode.getArbData()));
-            //MainActivity mAct = new MainActivity();
-            //mAct.textView.setText();
+        protected Boolean doInBackground(Void...arg0) {
+
+            try {
+                arbCode.main(null);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            try {
+                arbCode.setUrlCurrency(selectedCurrency);
+                //Log.d("test", "changing currency ");
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            return true; //not really used, not sure how to remove need for return value
+        }
+
+        protected void onProgressUpdate(Integer...a){
+        }
+
+        protected void onPostExecute(Boolean result) {
 
         }
     }
