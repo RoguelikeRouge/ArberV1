@@ -73,11 +73,15 @@ public class ArbCode {
     String url2 = "https://api.hitbtc.com/api/1/public/LTCbtc/orderbook";
     String exchangeName1 = "cryptopia";
     String exchangeName2 = "hitbtc";
+    String overviewExchange1;
+    String overviewExchange2;
     float ex1Data[] = new float[]{1,2,3,4};
     float ex2Data[] = new float[]{1,2,3,4};
 
     float arbData[] = new float[]{0,1,2,3,4,5,6,7,8,9,10}; //bestBuyPrice, BestBuyVol, BestbuyTotalPrice, Bestbuyex... profit%, profit btc, prof dol,
-    String CAMERON = "default";
+
+    int dateAndTime = 0000;
+
 
 
     public static void main(String[] args) throws IOException, JSONException, InterruptedException, Exception {
@@ -102,57 +106,6 @@ public class ArbCode {
 
 
 
-    }
-
-    //OLD METHOD - TO BE DELETED SOON
-    private void getArbitrageData(float[] exchange1Data, float[] exchange2Data) throws Exception{
-
-        //ask, askVol, bid, bidVol
-
-        //DEBUGGER VALUES
-        String test = "";
-        float percentProfit = 0;
-        float profitInBtc = 0;
-        float profitInDollars = 0;
-        System.out.println("Exchange 1--- Ask/volume :"+exchange1Data[0]+"/"+exchange1Data[1]+" bid/volume: "+exchange1Data[2]+"/"+exchange1Data[3]);
-        System.out.println("Exchange 2--- Ask/volume :"+exchange2Data[0]+"/"+exchange2Data[1]+" bid/volume: "+exchange2Data[2]+"/"+exchange2Data[3]);
-        //Now to tell arbitrage
-        //Can maybe replace with global variables that just get reset
-        if (exchange1Data[2] > exchange2Data[0]) { //if buy on cryptopia is more than sell on hitbtc
-            test = "Buy at "+exchange2Data[0]+" for "+exchange1Data[3]+" units, sell at "+exchange1Data[2]+" for "+exchange1Data[3]+" units";
-            System.out.println(test);
-            profitInBtc = (exchange1Data[2]-exchange2Data[0])*exchange2Data[1]; //(askPrice*askVolume)-(bidPrice*askVolume); // "you sell the same number of units you bought!!"
-            percentProfit = ((exchange1Data[2]-exchange2Data[0])/exchange2Data[0])*100; //(bidPrice - askPrice) / askPrice * 100;
-            System.out.println("Percent profit: "+percentProfit);
-
-
-        }
-        else if(exchange2Data[2] > exchange1Data[0]){
-            test = "Buy at "+exchange1Data[0]+" for "+exchange2Data[3]+" units, sell at "+exchange2Data[2]+" for "+exchange2Data[3]+" units";
-            System.out.println(test);
-            profitInBtc = (exchange2Data[2]-exchange1Data[0])*exchange1Data[1];
-            percentProfit = ((exchange2Data[2]-exchange1Data[0])/exchange1Data[0])*100;
-            System.out.println("Percent profit: "+percentProfit);
-
-        }
-        else{
-            System.out.println("No dice.");
-            percentProfit = ((exchange1Data[2]-exchange2Data[0])/exchange2Data[0])*100;
-            test = "bid: "+exchange1Data[2]+" LESS THAN sell: "+exchange2Data[0]+" Difference: "+percentProfit;
-            System.out.println(test);
-            percentProfit = ((exchange2Data[2]-exchange1Data[0])/exchange1Data[0])*100;
-            System.out.println("bid: "+exchange2Data[2]+" LESS THAN sell: "+exchange1Data[0]+" Difference: "+percentProfit);
-        }
-        int percentProfInt = (int) Math.ceil(percentProfit*100);
-        if(percentProfit>1.7){
-            //beep(50, percentProfInt);
-        }
-        profitInDollars = 15000*profitInBtc;
-        System.out.println("Profit in BTC: "+profitInBtc);
-        System.out.println("Profit in dollars: "+profitInDollars);
-
-        //create instructions for trading bot
-        CAMERON = "Time: "+getDateTime()+""+test+"  /nPercent profit: "+percentProfInt+" Profit in dollars: "+profitInDollars+"";
     }
 
     public String[] getTradingPairs(String exchangeName) throws JSONException, IOException{
@@ -417,6 +370,7 @@ public class ArbCode {
             System.out.println(getDateTime());
             ex1Data = this.getTradeDataFromJson(this.url1, this.exchangeName1); // format [askPrice, askVolume, bidPrice, bidVolume] (i.e. 4 elements: 0 to 3)
             ex2Data = this.getTradeDataFromJson(this.url2, this.exchangeName2);
+
             //this.getArbitrageData(ex1Data, ex2Data);
             this.getArbDataNew3(ex1Data,ex2Data);
             System.out.println("---------");
@@ -479,11 +433,9 @@ public class ArbCode {
                 List<String> allCoinsList = new ArrayList<String>();
                 allCoinsList.addAll(hashSet);
                 java.util.Collections.sort(allCoinsList, Collator.getInstance()); // sorts alphabetically, magically
-                //CAN RETURN LIST INSTEAD
-                //allCoinsArray = new String[allCoinsList.size()];
-                //allCoinsList.toArray(allCoinsArray);
+
                 //Log.d("all coins array",Arrays.toString(allCoinsArray)); // MAKE NEW LOG PLZ
-                //return allCoinsArray;
+
                 return allCoinsList;
             }
             catch(Exception e){
@@ -506,6 +458,24 @@ public class ArbCode {
 
 
         return allCoinsArray;
+
+    }
+
+    public String getOverviewExchange1(){
+
+        return "Ask/vol: "+ex1Data[0]+"/"+ex1Data[1]+" Bid/vol:"+ex1Data[2]+"/"+ex1Data[3];
+    }
+
+    public String getOverviewExchange2(){
+
+        return "Ask/vol: "+ex2Data[0]+"/"+ex2Data[1]+" Bid/vol:"+ex2Data[2]+"/"+ex2Data[3];
+
+    }
+
+    public String getLastUpdatedTime(){
+        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+        Date date = new Date();
+        return "Last Updated: "+dateFormat.format(date); //2016/11/16 12:08:43
 
     }
 

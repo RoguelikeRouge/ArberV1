@@ -8,11 +8,22 @@
     tools:context="com.example.lenovo.myapplication.MainActivity"
     tools:showIn="@layout/activity_main">
 
+
+
+
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:stretchColumns="1,2"
+
         >
 
+        <TextView
+            android:id="@+id/ex1_current_data_textview"
+            />
+        <TextView
+            android:id="@+id/ex2_current_data_textview"
+            />
 
         <TableRow>
             <TextView
@@ -32,6 +43,7 @@
                 android:entries="@array/spinner2Items"
                 />
         </TableRow>
+
         <TableRow>
             <TextView
                 android:id="@+id/buy_textview"
@@ -150,6 +162,12 @@
                 android:id="@+id/usd_profit_amount"
                 android:text="XXX"/>
         </TableRow>
+
+            <TextView
+                android:id="@+id/last_updated_textview"
+                android:text="test"
+            />
+
 
     </TableLayout>
 

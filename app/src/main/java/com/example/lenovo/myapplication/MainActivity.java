@@ -39,6 +39,11 @@ public class MainActivity extends AppCompatActivity {
     TextView textView11;
     TextView textView12;
     TextView textView13;
+    TextView textView14;
+    TextView textView15;
+    TextView textView16;
+
+
 
     Spinner coin1Spinner;
 
@@ -90,6 +95,13 @@ public class MainActivity extends AppCompatActivity {
 
         textView12 = (TextView) findViewById(R.id.sell_vol_currency_textview);
         textView13 = (TextView) findViewById(R.id.buy_vol_currency_textview);
+
+        textView14 = (TextView) findViewById(R.id.last_updated_textview);
+
+        textView15 = (TextView) findViewById(R.id.ex1_current_data_textview);
+        textView16 = (TextView) findViewById(R.id.ex2_current_data_textview);
+
+
 
         String allCoinsArray[];
 
@@ -174,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                     });
                 }
             };
-            timer.schedule(doAsynchronousTask, 0, 2000); //execute in every 5000 ms
+            timer.schedule(doAsynchronousTask, 0, 1000); //execute in every 5000 ms
 
 
 
@@ -230,6 +242,13 @@ public class MainActivity extends AppCompatActivity {
             textView9.setText(Float.toString(arbData[8]));
             textView10.setText(Float.toString(arbData[9]));
             textView11.setText(Float.toString(arbData[10]));
+
+
+            textView14.setText(arbCode.getLastUpdatedTime());
+
+            textView15.setText(arbCode.getOverviewExchange1());
+            textView16.setText(arbCode.getOverviewExchange2());
+
             //Log.d(TAG,Arrays.toString(arbCode.getArbData()));
         }
     }
