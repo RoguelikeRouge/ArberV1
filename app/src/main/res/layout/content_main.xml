@@ -12,6 +12,7 @@
 
 
     <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/arb_data_tableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:stretchColumns="1,2"
@@ -25,13 +26,13 @@
             android:id="@+id/ex2_current_data_textview"
             />
 
-        <TableRow>
+
             <TextView
                 android:id="@+id/coin_Pair_textview"
 
                 android:text="@string/choose_currency"
                  />
-            />
+
 
             <Spinner
                 android:id="@+id/coin1_spinner"
@@ -42,9 +43,10 @@
 
                 android:entries="@array/spinner2Items"
                 />
-        </TableRow>
+
 
         <TableRow>
+
             <TextView
                 android:id="@+id/buy_textview"
                 android:text="Best buy"/>

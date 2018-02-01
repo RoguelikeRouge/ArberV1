@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
+import android.widget.TableLayout;
 import android.widget.TextView;
 
 import java.util.Arrays;
@@ -100,6 +101,14 @@ public class MainActivity extends AppCompatActivity {
 
         textView15 = (TextView) findViewById(R.id.ex1_current_data_textview);
         textView16 = (TextView) findViewById(R.id.ex2_current_data_textview);
+
+        //tableLayout.setVisibility(View.INVISIBLE);
+
+
+
+
+
+
 
 
 
@@ -230,26 +239,41 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Float result) {
             arbData = arbCode.getArbData();
 
+            TableLayout tableLayout = (TableLayout) findViewById(R.id.arb_data_tableLayout);
+
             //{0,1,2,3,4,5,6,7,8,9,10}; //bestBuyPrice, BestBuyVol, BestbuyTotalPrice, Bestbuyex... profit%, profit btc, prof dol,
-            textView1.setText(Float.toString(arbData[0]));
-            textView2.setText(Float.toString(arbData[1]));
-            textView3.setText(Float.toString(arbData[2]));
-            textView4.setText(Float.toString(arbData[3]));
-            textView5.setText(Float.toString(arbData[4]));
-            textView6.setText(Float.toString(arbData[5]));
-            textView7.setText(Float.toString(arbData[6]));
-            textView8.setText(Float.toString(arbData[7]));
-            textView9.setText(Float.toString(arbData[8]));
-            textView10.setText(Float.toString(arbData[9]));
-            textView11.setText(Float.toString(arbData[10]));
+            if( arbData[0]==0){
 
 
-            textView14.setText(arbCode.getLastUpdatedTime());
+                tableLayout.setColumnCollapsed(0, true);
+                tableLayout.setColumnCollapsed(1, true);
+                tableLayout.setColumnCollapsed(2, true);
+            }
+            else {
+                textView1.setText(Float.toString(arbData[0]));
+                textView2.setText(Float.toString(arbData[1]));
+                textView3.setText(Float.toString(arbData[2]));
+                textView4.setText(Float.toString(arbData[3]));
+                textView5.setText(Float.toString(arbData[4]));
+                textView6.setText(Float.toString(arbData[5]));
+                textView7.setText(Float.toString(arbData[6]));
+                textView8.setText(Float.toString(arbData[7]));
+                textView9.setText(Float.toString(arbData[8]));
+                textView10.setText(Float.toString(arbData[9]));
+                textView11.setText(Float.toString(arbData[10]));
 
-            textView15.setText(arbCode.getOverviewExchange1());
-            textView16.setText(arbCode.getOverviewExchange2());
 
-            //Log.d(TAG,Arrays.toString(arbCode.getArbData()));
+                textView14.setText(arbCode.getLastUpdatedTime());
+
+                textView15.setText(arbCode.getOverviewExchange1());
+                textView16.setText(arbCode.getOverviewExchange2());
+
+                tableLayout.setColumnCollapsed(0, false);
+                tableLayout.setColumnCollapsed(1, false);
+                tableLayout.setColumnCollapsed(2, false);
+
+                //Log.d(TAG,Arrays.toString(arbCode.getArbData()));
+            }
         }
     }
 
