@@ -250,6 +250,10 @@ public class MainActivity extends AppCompatActivity {
                 tableLayout.setColumnCollapsed(2, true);
             }
             else {
+                tableLayout.setColumnCollapsed(0, false);
+                tableLayout.setColumnCollapsed(1, false);
+                tableLayout.setColumnCollapsed(2, false);
+
                 textView1.setText(Float.toString(arbData[0]));
                 textView2.setText(Float.toString(arbData[1]));
                 textView3.setText(Float.toString(arbData[2]));
@@ -263,17 +267,17 @@ public class MainActivity extends AppCompatActivity {
                 textView11.setText(Float.toString(arbData[10]));
 
 
-                textView14.setText(arbCode.getLastUpdatedTime());
 
-                textView15.setText(arbCode.getOverviewExchange1());
-                textView16.setText(arbCode.getOverviewExchange2());
 
-                tableLayout.setColumnCollapsed(0, false);
-                tableLayout.setColumnCollapsed(1, false);
-                tableLayout.setColumnCollapsed(2, false);
+
 
                 //Log.d(TAG,Arrays.toString(arbCode.getArbData()));
             }
+
+            textView14.setText(arbCode.getLastUpdatedTime());
+
+            textView15.setText(arbCode.getOverviewExchange1());
+            textView16.setText(arbCode.getOverviewExchange2());
         }
     }
 
