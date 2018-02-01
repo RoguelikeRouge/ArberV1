@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
+import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -265,6 +266,13 @@ public class MainActivity extends AppCompatActivity {
                 textView9.setText(Float.toString(arbData[8]));
                 textView10.setText(Float.toString(arbData[9]));
                 textView11.setText(Float.toString(arbData[10]));
+
+                if (arbData[8]>5){
+                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                    // Vibrate for 500 milliseconds
+                    v.vibrate(500);
+
+                }
 
 
 
